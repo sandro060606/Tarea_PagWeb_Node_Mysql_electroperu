@@ -17,7 +17,7 @@ exports.crearCliente = async (req, res) => {
     //6. Entregar un resultado (PK)
     res.status(201).json({
       id: result.insertId,
-      mensaje: 'Tienda Registrada correctamente'
+      mensaje: 'Cliente Registrado correctamente'
     })
 
   }catch(e){
@@ -29,7 +29,7 @@ exports.crearCliente = async (req, res) => {
 //Listar
 exports.obtenerClientes = async (req, res) => {
   //1. Preparar consulta
-  const sql = "SELECT c.id, c.apellidos, c.nombres, c.dni, c.telefono, t.tienda FROM clientes AS c INNER JOIN tiendas AS t ON c.idtienda = t.id"
+  const sql = "SELECT c.id, c.apellidos, c.nombres, c.dni, c.telefono, c.direccion, t.tienda FROM clientes AS c INNER JOIN tiendas AS t ON c.idtienda = t.id"
   //2. Transacción
   try{
     //3. Deserialización - PRIMER VALOR DEL ARREGLO
@@ -79,13 +79,17 @@ exports.actualizarCliente = async (req, res) => {
   let sqlParts = []   //campos que sufrirán actualización
   let values = []     //valores para los campos
 
-  if (apellidos){
+  if (apellidos != undefined){
     sqlParts.push('apellidos = ?')
     values.push(apellidos)
   }
-   if (nombres){
+   if (nombres != undefined){
     sqlParts.push('nombres = ?')
     values.push(nombres)
+  }
+  if (dni != undefined){
+    sqlParts.push('dni = ?')
+    values.push(dni)
   }
   if (telefono != undefined){
     sqlParts.push('telefono = ?')
@@ -95,7 +99,7 @@ exports.actualizarCliente = async (req, res) => {
     sqlParts.push('direccion = ?')
     values.push(direccion)
   }
-  if (idtienda!= undefined){
+  if (idtienda != undefined){
     sqlParts.push('idtienda = ?')
     values.push(idtienda)
   }
