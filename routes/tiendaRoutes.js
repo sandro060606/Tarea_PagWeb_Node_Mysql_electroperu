@@ -1,0 +1,17 @@
+const express = require('express')
+
+const router = express.Router()
+
+const tiendaController = require('../controllers/tiendaController')
+
+router.post('/', tiendaController.crearTienda)
+
+router.get('/', tiendaController.obtenerTiendas)
+
+router.get('/:id', tiendaController.obtenerTiendaPorId)
+
+router.put('/:id', tiendaController.actualizarTienda)
+
+router.delete('/:id', tiendaController.eliminarTienda)
+
+module.exports = router
