@@ -51,15 +51,22 @@ app.get('/productos', (req, res) => {
 app.get('/tiendas', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'tiendas.html'))
 })
+//Rutas para el modulo de Personas
 app.get('/personas', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'personas.html'))
+  res.sendFile(path.join(__dirname, 'public', 'personas/listar.html'))
+})
+app.get('/personas/crear', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'personas/crear.html'))
+})
+app.get('/personas/editar', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'personas/editar.html'))
 })
 
 //Rutas
 app.use('/api/productos', productoRoutes)
 app.use('/api/tiendas', tiendaRoutes)
 app.use('/api/clientes', clienteRoutes)
-app.use('api/personas', personaRoutes)
+app.use('/api/personas', personaRoutes)
 
 //Iniciar el servidor
 app.listen(PORT, () => {

@@ -18,10 +18,10 @@ const storage = multer.diskStorage({
   }
 })
 //Filtro (¿Que tipo de archivos se esta permitido?)
-const fileFilter = () => {
+const fileFilter = (req, file, cb) => {
   //Expresion Regular
   const allowedTypes = /jpeg|jpg|png|gif|webp/
-  const extname = allowedTypes.test(path.extname(FileReader.originalname).toLowerCase())
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase())
   const mimeType = allowedTypes.test(file.mimetype)
 
   //Si la extension es correcta, podemos GRABAR el archivo

@@ -1,3 +1,4 @@
+const { error } = require('console')
 const db = require('../config/db') //Acceso a la BD
 
 const path = require('path') //Manejo de rutas
@@ -8,7 +9,7 @@ const obtenerTodas = async (req, res) => {
   try{
     const sql = "SELECT * FROM personas"
     const [rows] = await db.query(sql) //Deserializado
-    res.jons(rows)
+    res.json(rows)
   }catch(e){
     console.error(e)
     res.status(500).json({error: 'Error en la Conexion'})
@@ -24,8 +25,8 @@ const crear = async (req, res) => {
     //1. Recibir los datos del formulario (texto)
     const  {apellidos, nombres, dni, telefono } = req.body
     //2. Recibir la fotografia
-    const fotografia = req.file ? `/uploads/${req.file.filename}` : null;
-
+    //const fotografia = req.file ? `/uploads/${req.file.filename}` : null;
+    const fotografia = 'nuevafoto.'
     //3.
 
     //4.Guardar un nuevo registro
@@ -38,8 +39,19 @@ const crear = async (req, res) => {
       })
 
   }catch(e){
-    console.error(e)
+    //console.error(e)
+    if(e.code === "ER_DUP_ENTRY"){
+      return res.status(400).json({error: 'DNI esta duplicado'})
+    }
+
+    res.status(500).json({error: 'Error en el Proceso de registro'})
   }
+}
+
+const crearTest = async(req, res) => {
+  res.status(201).json({
+    test: "correcto"
+  })
 }
 
 const actualizar = async(req, res) => {
@@ -58,6 +70,4 @@ module.exports = {
   actualizar,
   eliminar
 }
-
-
-
+  

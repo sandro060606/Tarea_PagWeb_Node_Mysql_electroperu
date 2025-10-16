@@ -9,6 +9,7 @@ router.get('/', personaController.obtenerTodas)
 
 //CREAR -> BINARIO
 //fotografia = name (fronted)
-router.post('/', upload.single('fotografia'), personaController.crear)
+//router.post('/', upload.single('fotografia'), personaController.crear)
+router.post('/', personaController.crear)
 
 module.exports = router

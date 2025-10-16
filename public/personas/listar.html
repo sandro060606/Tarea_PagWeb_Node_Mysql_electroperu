@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Personas</title>
+    <link rel="stylesheet" href="../css/listar.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header></header>
+
+    <main class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Listar Personas</h2>
+          <a href="http://localhost:3000/personas/crear">Registrar</a>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table
+              id="tabla-personas"
+              class="table table-striped table-bordered table-sm"
+            >
+            <colgroup>
+              <col style="width: 5%;">
+              <col style="width: 25%;">
+              <col style="width: 25%;">
+              <col style="width: 10%;">
+              <col style="width: 10%;">
+              <col style="width: 10%;">
+              <col style="width: 15%;">
+            </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Apellidos</th>
+                  <th>Nombres</th>
+                  <th>DNI</th>
+                  <th>Telefono</th>
+                  <th>Fotografia</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Asincrono -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer></footer>
+
+    <script>
+      const API_URL = "http://localhost:3000/api/personas";
+      const datostabla = document.querySelector("#tabla-personas tbody")
+
+      async function obtenerDatos() {
+        const response = await fetch(API_URL, { method: "get" });
+        if(!response.ok){
+          console.error("Problemas en la Conexión")
+          return;
+        }
+
+        const personas = await response.json();
+        
+        if(personas.length == 0){
+          console.log("No hay Personas Registradas")
+          const fila = document.createElement("tr")
+          const celda = document.createElement("td")
+
+          celda.colSpan = 7
+          celda.textContent = 'No hay Personas Registradas'
+          celda.classList.add('text-center')
+
+          fila.appendChild(celda)
+          datostabla.appendChild(fila)
+          return;
+        }
+
+        //Renderizar los datos en el cuerpo de la tabla
+        console.log(personas);
+        personas.forEach(persona => {
+          const row = datostabla.insertRow() //<tr></tr>
+          
+          row.insertCell().textContent = persona.id
+          row.insertCell().textContent = persona.apellidos
+          row.insertCell().textContent = persona.nombres
+          row.insertCell().textContent = persona.dni
+          row.insertCell().textContent = persona.telefono
+
+          //El Campo foto se gestionara a través de un enlace
+          const fotoCell = row.insertCell()
+          const fotoLnk = document.createElement("a")
+          fotoLnk.href = persona.fotografia
+          fotoLnk.textContent = 'Ver foto'
+          fotoLnk.classList.add('btn', 'btn-sm', 'btn-primary')
+          fotoCell.appendChild(fotoLnk)
+
+          const actionCell = row.insertCell()
+          //Eliminar => Boton (JS) => fetch (asincrono)
+          const btnEliminar = document.createElement("button")
+          btnEliminar.textContent = 'Eliminar'
+          btnEliminar.classList.add('btn', 'btn-sm', 'btn-danger')
+          btnEliminar.onclick = () => eliminarPersona(persona)
+          //Editar => enlace => se realizara en otra vista
+          const editarLnk = document.createElement("a")
+          editarLnk.href = '#'
+          editarLnk.textContent = 'Editar'
+          editarLnk.classList.add('btn', 'btn-sm', 'btn-warning')
+          //Agregamos el boton y el enlace a la nueva celda
+          actionCell.appendChild(btnEliminar)
+          actionCell.appendChild(editarLnk)
+
+        });
+
+      }
+      
+      async function eliminarPersona(persona) {
+        if(confirm(`¿Esta seguro de eliminar el registro de ${persona.nombres} ${persona.apellidos}?`)){
+
+        }
+      }
+      
+      document.addEventListener("DOMContentLoaded", obtenerDatos);
+    </script>
+  </body>
+</html>
