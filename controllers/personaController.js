@@ -25,9 +25,9 @@ const crear = async (req, res) => {
     //1. Recibir los datos del formulario (texto)
     const  {apellidos, nombres, dni, telefono } = req.body
     //2. Recibir la fotografia
-    //const fotografia = req.file ? `/uploads/${req.file.filename}` : null;
-    const fotografia = 'nuevafoto.'
-    //3.
+    const fotografia = req.file ? `/uploads/${req.file.filename}` : null;
+    //const fotografia = 'nuevafoto.'
+    //3. Validacion...
 
     //4.Guardar un nuevo registro
     const [result] = await db.query("INSERT INTO personas (apellidos, nombres, dni, telefono, fotografia) VALUES (?,?,?,?,?)", 

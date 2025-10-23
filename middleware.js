@@ -28,9 +28,8 @@ const fileFilter = (req, file, cb) => {
   if (mimeType && extname){
     return cb(null, true)
   }else{
-    cb(new Error('Solo se permiten extensiones de imagenes'))
+    cb(new Error('Solo se permiten imagenes (jpeg, jpg, png, gif, webp)'))
   }
-
 }
 //Configuracion "multer"
 // * 1024 (KB) * 1024 (Mb)
