@@ -27,7 +27,8 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <form action="" id="form-personas">
+          <!-- Permitir la Subida de Archivos = multipart -->
+          <form action="" id="form-personas" enctype="multipart/form-data" autocomplete="off">
             <div class="card">
               <div class="card-header">
                 <strong>Completa el Formulario</strong>
@@ -41,6 +42,7 @@
                         class="form-control"
                         placeholder="Nombres"
                         id="nombres"
+                        maxlength="40"
                         required
                       />
                       <label for="nombres">Nombres</label>
@@ -53,6 +55,7 @@
                         class="form-control"
                         placeholder="Apellidos"
                         id="apellidos"
+                        maxlength="40"
                         required
                       />
                       <label for="apellidos">Apellidos</label>
@@ -67,8 +70,12 @@
                         class="form-control"
                         placeholder="DNI"
                         id="dni"
+                        pattern="[0-9]*"
+                        title="Solo se Permiten Numeros" 
+                        maxlength="8"
+                        minlength="8"
                         required
-                      />
+                      /><!-- pattern="[0-9]*"  Expresion Regular  -->
                       <label for="dni">DNI</label>
                     </div>
                   </div>
@@ -77,10 +84,14 @@
                       <input
                         type="text"
                         class="form-control"
-                        placeholder="Telefono"
+                        placeholder="Telefono" 
                         id="telefono"
+                        pattern="[0-9]*"
+                        title="Solo se Permiten Numeros"
+                        maxlength="9"
+                        minlength="9"
                         required
-                      />
+                      /><!-- pattern="[0-9]*"  Expresion Regular  -->
                       <label for="telefono">Telefono</label>
                     </div>
                   </div>
@@ -90,9 +101,10 @@
                     <div class="form-floating">
                       <input
                         type="file"
-                        id="foto"
-                        name="foto"
-                        accept="image/png, image/jpeg"
+                        id="fotografia"
+                        name="fotografia"
+                        accept=".jpg,.jpeg,.png,.gif"
+                        required
                       />
                     </div>
                   </div>
@@ -176,7 +188,9 @@
         }
       }); */
 
+      //Esta Funcion Permite guardar datos del Formulario SIN ADJUNTAR DATOS BINARIOS
       async function guardarDatos() {
+        //Esto es para enviar Formatos Json
         const data = {
           apellidos: apellidos.value,
           nombres: nombres.value,
@@ -195,6 +209,29 @@
         console.log(result);
       }
 
+      //Esta funcion envia archivos al backend
+      async function guardarDatosBinario() {
+        const formData = new FormData()
+
+        formData.append('apellidos', apellidos.value)
+        formData.append('nombres', nombres.value)
+        formData.append('dni', dni.value)
+        formData.append('telefono', telefono.value)
+
+        //Campo que envia el archivo
+        formData.append('fotografia', document.querySelector("#fotografia").files[0])
+
+        //Peticion Fetch
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: formData
+        })
+
+        //Evaluamos resultado
+        const result = await response.json()
+        console.log(result)
+      }
+
       formulario.addEventListener("submit", (event) => {
         event.preventDefault(); //Cancelacion de Evento
 
@@ -207,7 +244,7 @@
           cancelButtonText: "Cancelar",
         }).then((result) => {
           if (result.isConfirmed) {
-            guardarDatos();
+            guardarDatosBinario();
           }
         });
       });
